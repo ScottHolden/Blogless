@@ -24,28 +24,22 @@ resource storage 'Microsoft.Storage/storageAccounts@2021-04-01' = {
 resource appServicePlan 'Microsoft.Web/serverfarms@2021-01-01' = {
   name: prefix
   location: resourceGroup().location
-  kind: 'linux'
   sku: {
     tier: 'Dynamic'
     name: 'Y1'
-  }
-  properties: {
-    reserved: true
   }
 }
 resource appService 'Microsoft.Web/sites@2021-01-01' = {
   name: '${prefix}mgmt'
   location: resourceGroup().location
-  kind: 'functionapp,linux'
+  kind: 'functionapp'
   identity: {
     type: 'SystemAssigned'
   }
   properties: {
     serverFarmId: appServicePlan.id
     clientAffinityEnabled: false
-    siteConfig: {
-      linuxFxVersion: 'dotnet|3.1'
-    }
+    httpsOnly: true
   }
   resource appsettings 'config@2021-01-01' = {
     name: 'appsettings'
